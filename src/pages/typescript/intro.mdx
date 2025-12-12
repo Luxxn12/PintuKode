@@ -1,0 +1,83 @@
+---
+title: "Intro to TypeScript"
+description: "Ringkasan resmi TypeScript: apa itu, mengapa dipakai, cara instal, dan cara menjalankannya."
+---
+
+import { Callout } from "nextra/components";
+
+# TypeScript | Introduction
+
+## Overview
+
+TypeScript adalah superset JavaScript dengan pengecekan tipe statis. Ia dikompilasi (di-"transpile") ke JavaScript standar sehingga dapat berjalan di browser, Node.js, Deno, atau lingkungan lain.
+
+<Callout type="info" emoji="ℹ️">
+  Pastikan untuk mempelajari [JavaScript](/javascript/intro) terlebih dahulu
+  untuk mempermudah pemahaman.
+</Callout>
+
+## Apa itu TypeScript
+
+TypeScript menambahkan:
+
+- Pengecekan tipe saat pengembangan (static type checking).
+- Fitur bahasa modern seperti enums, decorators (eksperimental), dan utilitas tipe.
+- Dukungan editor lebih baik (auto-complete, refactor) karena informasi tipe yang kaya.
+
+## Apa Perbedaan TypeScript dengan JavaScript
+
+- Semua kode JavaScript valid di TypeScript.
+- TypeScript memeriksa kesesuaian tipe sebelum dijalankan; hasil akhir tetap JavaScript.
+- Sistem tipe bersifat struktural (berdasarkan bentuk nilai).
+
+Contoh perbedaan:
+
+```javascript copy showLineNumbers filename="app.js"
+let total = 5;
+total = "hello"; // JavaScript tidak memblokir ini saat runtime
+```
+
+```typescript copy showLineNumbers filename="app.ts"
+let total: number = 5;
+total = "hello"; // Error: Type 'string' is not assignable to type 'number'
+```
+
+## Cara Menjalankan TypeScript
+
+Gunakan TypeScript Compiler (tsc) untuk mengubah `.ts/.tsx` menjadi `.js`.
+
+1) Instal lokal dalam proyek:
+
+```bash copy
+npm install --save-dev typescript
+```
+
+2) Inisialisasi konfigurasi:
+
+```bash copy
+npx tsc --init
+```
+
+3) Tulis berkas:
+
+```typescript copy filename="src/hello.ts"
+export function greet(name: string) {
+  return `Hello, ${name}`;
+}
+
+console.log(greet("TypeScript"));
+```
+
+4) Kompilasi:
+
+```bash copy
+npx tsc
+```
+
+File JavaScript hasil kompilasi ada di folder `outDir` (default: `./dist` jika diatur).
+
+> Tip: Aktifkan opsi ketat (`"strict": true`) di `tsconfig.json` untuk pengecekan maksimal, sesuai rekomendasi dokumentasi resmi.
+
+## Kesimpulan
+
+TypeScript menambah sistem tipe di atas JavaScript untuk menangkap kesalahan lebih awal dan meningkatkan pengalaman editor. Instal lokal, inisialisasi `tsconfig`, aktifkan opsi ketat, dan kompilasi dengan `tsc` untuk menghasilkan JavaScript yang dapat dijalankan.

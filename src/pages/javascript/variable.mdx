@@ -1,0 +1,44 @@
+---
+title: "JavaScript Variable"
+description: "Panduan deklarasi variabel modern di JavaScript: perbedaan let, const, dan var sesuai praktik MDN."
+---
+
+# JavaScript | Variable
+
+## Overview
+
+Variabel menyimpan referensi ke nilai. JavaScript bersifat dinamis, sehingga tipe nilai dapat berubah.
+
+## Introducing **JavaScript**
+
+Gunakan `const` untuk nilai yang tidak di-reassign, `let` untuk yang berubah, dan hindari `var` di kode modern.
+
+## Penggunaan **Variabel** Pada JavaScript
+
+```js
+const siteName = "PintuKode"; // tidak di-reassign
+let counter = 0; // bisa berubah
+counter += 1;
+```
+
+## Mengenal Berbagai Jenis Variabel dalam JavaScript
+
+### Menggunakan Variabel dengan Kata Kunci const
+
+`const` mencegah reassign. Gunakan untuk default.
+
+### Menggunakan Variabel dengan Kata Kunci let
+
+`let` memungkinkan reassign dan memiliki block scope.
+
+### Menggunakan Variabel dengan Kata Kunci var
+
+`var` bersifat function-scoped dan dihoist; hindari di kode baru, gunakan `let/const`.
+
+## Perbedaan antara const, let, dan var
+
+- `const`: block-scoped, tidak bisa di-reassign.
+- `let`: block-scoped, bisa di-reassign.
+- `var`: function-scoped, dihoist; hindari kecuali perlu kompatibilitas lama.
+
+Praktik umum: default ke `const`, ganti ke `let` hanya jika nilainya perlu berubah.

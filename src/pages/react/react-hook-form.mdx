@@ -1,0 +1,322 @@
+---
+title: "React Hook Form"
+description: "Panduan React Hook Form: instalasi, register input, validasi bawaan, schema resolver (Zod/Yup), Controller, dan integrasi UI."
+---
+
+# React Hook Form
+
+React Hook Form adalah library ringan untuk mengelola form di React dengan performa tinggi. Ia meminimalkan rerender, mendukung validasi bawaan HTML dan schema validation, serta mudah diintegrasikan dengan komponen UI populer.
+
+## Instalasi
+
+```bash copy
+npm install react-hook-form
+# opsional, untuk schema validation
+npm install zod @hookform/resolvers
+```
+
+## Membuat Form Dasar
+
+Gunakan `useForm` untuk mendapatkan helper, lalu daftarkan field dengan `register`.
+
+```tsx copy showLineNumbers filename="src/App.tsx"
+import { useForm } from "react-hook-form";
+
+type FormValues = {
+  name: string;
+  email: string;
+};
+
+export default function App() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
+
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <label>
+        Name
+        <input
+          {...register("name", { required: "Name wajib diisi" })}
+          placeholder="Nama lengkap"
+        />
+        {errors.name && <p>{errors.name.message}</p>}
+      </label>
+
+      <label>
+        Email
+        <input
+          type="email"
+          {...register("email", {
+            required: "Email wajib diisi",
+            pattern: {
+              value: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,
+              message: "Format email tidak valid",
+            },
+          })}
+          placeholder="nama@email.com"
+        />
+        {errors.email && <p>{errors.email.message}</p>}
+      </label>
+
+      <button type="submit">Kirim</button>
+    </form>
+  );
+}
+```
+
+## Validasi dengan Schema (Zod)
+
+Gunakan `zodResolver` untuk validasi konsisten antar client/server.
+
+```tsx copy showLineNumbers filename="src/App.tsx"
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const schema = z.object({
+  name: z.string().min(1, "Name wajib diisi"),
+  email: z.string().email("Format email tidak valid"),
+});
+
+type FormValues = z.infer<typeof schema>;
+
+export default function App() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: "", email: "" },
+  });
+
+  return (
+    <form onSubmit={handleSubmit(console.log)}>
+      <input {...register("name")} placeholder="Nama lengkap" />
+      {errors.name && <p>{errors.name.message}</p>}
+
+      <input {...register("email")} placeholder="nama@email.com" />
+      {errors.email && <p>{errors.email.message}</p>}
+
+      <button type="submit">Kirim</button>
+    </form>
+  );
+}
+```
+
+## Menggunakan Controller untuk Komponen Kontrol Terkelola
+
+Untuk komponen yang tidak mengekspos `ref` atau tidak bekerja dengan `register` langsung (mis. select kustom, date picker), gunakan `Controller`.
+
+```tsx copy showLineNumbers filename="src/MyForm.tsx"
+import { Controller, useForm } from "react-hook-form";
+
+type FormValues = { newsletter: boolean; country: string };
+
+export function MyForm() {
+  const { control, handleSubmit } = useForm<FormValues>({
+    defaultValues: { newsletter: true, country: "id" },
+  });
+
+  return (
+    <form onSubmit={handleSubmit(console.log)}>
+      <Controller
+        name="newsletter"
+        control={control}
+        render={({ field }) => (
+          <label>
+            <input type="checkbox" {...field} checked={field.value} />
+            Ikuti newsletter
+          </label>
+        )}
+      />
+
+      <Controller
+        name="country"
+        control={control}
+        rules={{ required: "Pilih negara" }}
+        render={({ field, fieldState }) => (
+          <div>
+            <select {...field}>
+              <option value="id">Indonesia</option>
+              <option value="sg">Singapore</option>
+              <option value="my">Malaysia</option>
+            </select>
+            {fieldState.error && <p>{fieldState.error.message}</p>}
+          </div>
+        )}
+      />
+
+      <button type="submit">Simpan</button>
+    </form>
+  );
+}
+```
+
+## Integrasi UI Library
+
+Dengan `Controller`, kita bisa integrasi dengan UI library seperti MUI/Chakra/ShadCN.
+
+```tsx copy showLineNumbers filename="src/Form.tsx"
+import { Controller, useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input"; // contoh input ShadCN
+
+type FormValues = { username: string };
+
+export function Form() {
+  const { control, handleSubmit } = useForm<FormValues>();
+
+  return (
+    <form onSubmit={handleSubmit(console.log)}>
+      <Controller
+        name="username"
+        control={control}
+        rules={{ required: "Username wajib diisi" }}
+        render={({ field, fieldState }) => (
+          <div>
+            <Input {...field} placeholder="username" />
+            {fieldState.error && <p>{fieldState.error.message}</p>}
+          </div>
+        )}
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+## Form Bersarang dengan FormProvider
+
+`FormProvider` dan `useFormContext` memudahkan berbagi instance form ke komponen anak.
+
+```tsx copy showLineNumbers filename="src/Parent.tsx"
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+
+type FormValues = { firstName: string; lastName: string };
+
+function NameFields() {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormValues>();
+
+  return (
+    <>
+      <input {...register("firstName", { required: "Nama depan wajib" })} />
+      {errors.firstName && <p>{errors.firstName.message}</p>}
+
+      <input {...register("lastName", { required: "Nama belakang wajib" })} />
+      {errors.lastName && <p>{errors.lastName.message}</p>}
+    </>
+  );
+}
+
+export default function ParentForm() {
+  const methods = useForm<FormValues>();
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <NameFields />
+        <button type="submit">Kirim</button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
+## Reset, Default Values, dan Watch
+
+- `defaultValues` mengisi nilai awal field.
+- `reset` mengembalikan form ke nilai tertentu.
+- `watch` memantau perubahan field untuk memicu efek.
+
+```tsx copy showLineNumbers filename="src/WatchExample.tsx"
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+type FormValues = { email: string };
+
+export function WatchExample() {
+  const { register, watch, reset } = useForm<FormValues>({
+    defaultValues: { email: "" },
+  });
+
+  const email = watch("email");
+
+  useEffect(() => {
+    console.log("Email berubah:", email);
+  }, [email]);
+
+  return (
+    <div>
+      <input {...register("email")} placeholder="Email" />
+      <button type="button" onClick={() => reset({ email: "" })}>
+        Reset
+      </button>
+    </div>
+  );
+}
+```
+
+## Integrasi dengan Next.js App Router
+
+- Form tetap berada di Client Component (`"use client"`).
+- Untuk submit ke server, gunakan Server Actions atau Route Handler; pastikan data tervalidasi ulang di server.
+- Hindari logic sensitif di klien; gunakan schema validation di server dan klien bila perlu.
+
+Contoh submit dengan Server Action:
+
+```tsx copy showLineNumbers filename="app/contact/page.tsx"
+"use client";
+
+import { useForm } from "react-hook-form";
+import { submitContact } from "./actions";
+
+type FormValues = { message: string };
+
+export default function ContactPage() {
+  const { register, handleSubmit } = useForm<FormValues>();
+
+  return (
+    <form
+      onSubmit={handleSubmit(async (data) => {
+        await submitContact(data);
+      })}
+    >
+      <textarea {...register("message", { required: "Pesan wajib diisi" })} />
+      <button type="submit">Kirim</button>
+    </form>
+  );
+}
+```
+
+```ts copy showLineNumbers filename="app/contact/actions.ts"
+"use server";
+
+import { z } from "zod";
+
+const schema = z.object({ message: z.string().min(1) });
+
+export async function submitContact(data: unknown) {
+  const parsed = schema.parse(data);
+  // simpan ke DB atau kirim email
+  return { ok: true, message: parsed.message };
+}
+```
+
+## Praktik Baik
+
+- Gunakan validasi native HTML untuk aturan sederhana, schema resolver untuk konsistensi lintas platform.
+- Jaga agar Client Components hanya berisi logika interaktif; pemrosesan utama sebaiknya di server.
+- Manfaatkan `FormProvider` untuk form kompleks dan `Controller` untuk komponen UI pihak ketiga.
+- Pastikan error message informatif dan aksesibel (gunakan `aria-*` bila perlu).
+
+Untuk detail lebih lanjut, lihat dokumentasi resmi: https://react-hook-form.com/get-started.

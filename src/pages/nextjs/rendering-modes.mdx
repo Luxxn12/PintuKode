@@ -1,0 +1,120 @@
+---
+title: "Next.js Rendering Modes"
+description: "Rendering di Next.js App Router (React 19): Server Components default, Client Components opt-in, streaming, dan opsi statis/dinamis."
+---
+
+import { CheckCircle, XCircle } from "@phosphor-icons/react";
+
+# Next.js | Rendering Modes
+
+## Overview
+
+App Router Next.js (kompatibel React 19) merender Server Components secara default dan mengizinkan Client Components secara opt-in. HTML dirender di server dan di-streaming, sementara JavaScript klien hanya dikirim untuk bagian yang memerlukan interaktivitas. Kita memilih strategi statis/dinamis per segmen rute.
+
+## Server Components
+
+![SSR](/images/rendering-modes/ssr.png)
+
+Komponen Server React memungkinkan kita menulis UI yang dirender (dan bisa dicache) di server. Di Next.js, pekerjaan rendering dibagi per segmen rute untuk mengaktifkan streaming dan rendering parsial, dengan tiga strategi:
+
+- [Static Rendering](#static-rendering-default)
+- [Dynamic Rendering](#dynamic-rendering)
+- [Streaming](#streaming)
+
+### Manfaat dari Server Rendering
+
+Ada beberapa manfaat dalam melakukan pekerjaan rendering di server, termasuk:
+
+- **Pengambilan Data**: Komponen Server memungkinkan kita untuk memindahkan pengambilan data ke server, lebih dekat dengan sumber data kita. Ini dapat meningkatkan kinerja dengan mengurangi waktu yang diperlukan untuk mengambil data yang diperlukan untuk rendering, dan jumlah permintaan yang diperlukan oleh client.
+- **Keamanan**: Komponen Server memungkinkan kita untuk menyimpan data sensitif dan logika di server, seperti token dan kunci API, tanpa risiko mengeksposnya ke client.
+- **Penyimpanan Cache**: Dengan merender di server, hasilnya dapat dicache dan digunakan kembali pada permintaan berikutnya dan di seluruh pengguna. Ini dapat meningkatkan kinerja dan mengurangi biaya dengan mengurangi jumlah rendering dan pengambilan data yang dilakukan pada setiap permintaan.
+- **Ukuran Bundle**: Komponen Server memungkinkan kita untuk menyimpan dependensi besar yang sebelumnya akan mempengaruhi ukuran bundel JavaScript client di server. Ini bermanfaat bagi pengguna dengan internet yang lambat atau perangkat yang kurang kuat, karena client tidak perlu mengunduh, mengurai, dan menjalankan JavaScript apa pun untuk Komponen Server.
+- **Muat Halaman Awal dan [First Contentful Paint (FCP)](https://web.dev/fcp/)**: Di server, kita dapat menghasilkan HTML untuk memungkinkan pengguna melihat halaman segera, tanpa harus menunggu client untuk mengunduh, mengurai, dan menjalankan JavaScript yang diperlukan untuk merender halaman.
+- **Optimasi Mesin Pencari dan Kemampuan Dibagikan di Media Sosial**: HTML yang dirender dapat digunakan oleh bot mesin pencari untuk mengindeks halaman kita dan bot media sosial untuk menghasilkan pratinjau kartu sosial untuk halaman kita.
+- **Streaming**: Komponen Server memungkinkan kita untuk membagi pekerjaan rendering menjadi potongan dan mengalirkannya ke client saat potongan tersebut siap. Ini memungkinkan pengguna melihat bagian-bagian dari halaman lebih awal tanpa harus menunggu seluruh halaman selesai dirender.
+
+### Strategi Rendering Server
+
+#### Static Rendering (Default)
+
+Rute dirender saat build atau di background setelah data berubah. Hasilnya dicache dan bisa didorong ke CDN. Cocok untuk data tidak terpersonalisasi seperti halaman blog atau produk.
+
+#### Dynamic Rendering
+
+Rute dirender per permintaan. Berguna untuk data yang dipersonalisasi atau hanya diketahui saat request (cookies, query).
+
+> Rute Dinamis dengan Data yang Dicache
+>
+> Di sebagian besar situs web, rute tidak sepenuhnya statis atau sepenuhnya dinamis - ini adalah spektrum. Sebagai contoh, kita dapat memiliki halaman e-commerce yang menggunakan data produk yang dicache yang direvalidasi secara berkala, tetapi juga memiliki data pelanggan yang dipersonalisasi yang tidak dicache.
+>
+> Di Next.js, kita dapat memiliki rute yang dirender secara dinamis yang memiliki data yang dicache dan yang tidak dicache. Hal ini karena Payload RSC dan data dicache secara terpisah. Ini memungkinkan kita memilih untuk merender secara dinamis tanpa harus khawatir tentang dampak kinerja dari mengambil semua data pada waktu permintaan.
+
+#### Streaming
+
+![Streaming 1](https://nextjs.org/_next/image?url=%2Fdocs%2Fdark%2Fsequential-parallel-data-fetching.png&w=1920&q=75&dpl=dpl_EZni8Gd8CnmKBcPM4Nmj38WxhbFQ)
+
+Streaming merender UI secara progresif dari server. Pekerjaan dibagi menjadi potongan dan di-streaming ke klien ketika siap, sehingga bagian halaman tampil lebih cepat tanpa menunggu seluruh rute selesai. App Router mengaktifkan streaming secara default.
+
+## Client Components
+
+![CSR](/images/rendering-modes/csr.png)
+
+Komponen Klien memungkinkan kita menulis UI interaktif yang dirender di klien. Rendering klien bersifat opt-in—kita eksplisit memberi tahu Next.js komponen mana yang harus dirender di klien.
+
+Halaman ini akan menjelaskan bagaimana Komponen Klien bekerja, bagaimana mereka dirender, dan kapan kita mungkin menggunakannya.
+
+### Manfaat dari Client Rendering
+
+Ada beberapa manfaat dari melakukan pekerjaan rendering di klien, termasuk:
+
+- **Interaktivitas**: Komponen Klien dapat menggunakan state, efek, dan penerima acara, yang berarti mereka dapat memberikan umpan balik langsung kepada pengguna dan memperbarui UI.
+- **API Browser**: Komponen Klien memiliki akses ke API browser, seperti [geolocation](https://developer.mozilla.org/docs/Web/API/Geolocation_API) atau [localStorage](https://developer.mozilla.org/docs/Web/API/Window/localStorage), yang memungkinkan kita untuk membangun UI untuk kasus penggunaan tertentu.
+
+### Menggunakan Komponen Klien di Next.js
+
+Untuk menggunakan Komponen Klien, kita dapat menambahkan direktif React `["use client"](https://react.dev/reference/react/use-client)` di bagian atas file, di atas impor kita.
+
+`"use client"` mendeklarasikan batas antara Server dan Client Component. Dengan mendefinisikannya di sebuah file, semua modul yang diimpor ke dalamnya dianggap bagian bundel klien dan dirender di klien.
+
+```tsx copy showLineNumbers filename="app/counter.tsx"
+"use client";
+
+import { useState } from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Kamu mengklik {count} kali</p>
+      <button onClick={() => setCount(count + 1)}>Klik saya</button>
+    </div>
+  );
+}
+```
+
+Diagram di bawah ini menunjukkan komponen bertingkat, menggunakan `onClick` dan `useState` di `toggle.js` akan menyebabkan kesalahan jika direktif `"use client"` tidak didefinisikan. Ini karena, secara default, komponen dirender di server di mana API ini tidak tersedia. Dengan mendefinisikan direktif `"use client"` untuk `toggle.js`, kita dapat memberi tahu React untuk merender komponen dan anak-anaknya di klien, di mana API tersedia.
+
+![Client Components](https://nextjs.org/_next/image?url=%2Fdocs%2Fdark%2Fuse-client-directive.png&w=1920&q=75&dpl=dpl_EZni8Gd8CnmKBcPM4Nmj38WxhbFQ)
+
+> Kita bisa memiliki beberapa titik `"use client"` untuk membagi bundel klien. Tidak perlu menambahkannya di setiap komponen turunannya; cukup di batas tertinggi cabang yang perlu interaktivitas.
+
+## Komparasi Antara Server Component dan Client Component
+
+Berikut adalah ringkasan cepat tentang berbagai kasus penggunaan untuk Komponen Server dan Klien:
+
+| Apa yang perlu kamu lakukan?                                                                | Server Component                                      | Client Component                                      |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+| Mengambil data                                                                              | <CheckCircle size={18} color="green" weight="fill" /> | <XCircle size={18} weight="fill" />                   |
+| Mengakses sumber daya backend (langsung)                                                    | <CheckCircle size={18} color="green" weight="fill" /> | <XCircle size={18} weight="fill" />                   |
+| Menyimpan informasi sensitif di server (token akses, kunci API, dll.)                       | <CheckCircle size={18} color="green" weight="fill" /> | <XCircle size={18} weight="fill" />                   |
+| Menyimpan dependensi besar di server / Mengurangi JavaScript sisi klien                     | <CheckCircle size={18} color="green" weight="fill" /> | <XCircle size={18} weight="fill" />                   |
+| Menambahkan interaktivitas dan pemantau peristiwa (`onClick()`, `onChange()`, dll.)         | <XCircle size={18} weight="fill" />                   | <CheckCircle size={18} color="green" weight="fill" /> |
+| Menggunakan State dan Efek Siklus Hidup (`useState()`, `useReducer()`, `useEffect()`, dll.) | <XCircle size={18} weight="fill" />                   | <CheckCircle size={18} color="green" weight="fill" /> |
+| Menggunakan API hanya di browser                                                            | <XCircle size={18} weight="fill" />                   | <CheckCircle size={18} color="green" weight="fill" /> |
+| Menggunakan kaitan khusus yang bergantung pada state, efek, atau API hanya di browser       | <XCircle size={18} weight="fill" />                   | <CheckCircle size={18} color="green" weight="fill" /> |
+| Menggunakan [Komponen Kelas React](https://react.dev/reference/react/Component)             | <XCircle size={18} weight="fill" />                   | <CheckCircle size={18} color="green" weight="fill" /> |
+
+## Kesimpulan
+
+Pilih Server Components sebagai default untuk memindahkan data fetching dan logika ke server, gunakan Client Components hanya ketika perlu interaktivitas atau API browser, lalu pilih strategi statis/dinamis dan streaming agar konten tampil secepat mungkin.

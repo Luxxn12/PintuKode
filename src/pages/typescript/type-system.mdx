@@ -1,0 +1,151 @@
+---
+title: "Type System"
+description: "Ikhtisar sistem tipe TypeScript sesuai dokumentasi resmi: anotasi, inferensi, alias/interface, union, narrowing, generics, dan structural typing."
+---
+
+# TypeScript | Type System
+
+## Overview
+
+TypeScript memeriksa tipe sebelum runtime. Kamu bisa membiarkan kompiler menginferensi tipe atau menuliskannya secara eksplisit untuk menangkap kesalahan lebih awal.
+
+## Inferensi Tipe
+
+TypeScript menginferensi tipe dari nilai awal.
+
+```typescript copy
+let helloWorld = "Hello World";
+// helloWorld: string
+```
+
+Inferensi meminimalkan anotasi manual, namun anotasi eksplisit berguna untuk API publik atau kasus ambigu.
+
+## Anotasi Tipe
+
+Gunakan anotasi untuk memberi sinyal tipe yang diharapkan.
+
+```typescript copy
+let total: number = 42;
+const names: string[] = ["Ayu", "Raka"];
+```
+
+## Object Type dengan interface atau type
+
+Buat kontrak bentuk data menggunakan `interface` atau `type alias`.
+
+```typescript copy
+interface User {
+  name: string;
+  id: number;
+}
+
+const user: User = {
+  name: "Hayes",
+  id: 0,
+};
+```
+
+Pelanggaran bentuk akan diperingatkan:
+
+```typescript copy {8-9}
+interface User {
+  name: string;
+  id: number;
+}
+
+const user: User = {
+  username: "Hayes",
+};
+// Error: Object literal may only specify known properties
+```
+
+`interface` bisa digabung (declaration merging), sedangkan `type` mendukung union, tuple, dan mapped type. Pilih sesuai kebutuhan.
+
+```typescript copy
+type UserId = number | string;
+type Point = { x: number; y: number };
+```
+
+## Anotasi Fungsi
+
+```typescript copy
+function formatUser(user: User): string {
+  return `${user.name} (#${user.id})`;
+}
+
+const toLabel = (value: string | number): string => `Value: ${value}`;
+```
+
+Parameter, nilai kembali, dan fungsi panah semuanya bisa dianotasi. Jika nilai kembali tidak ditulis, TypeScript menginferensi dari `return`.
+
+## Union dan Narrowing
+
+Union menyatakan nilai bisa berupa beberapa tipe; narrowing mengecilkan tipe di cabang kode.
+
+```typescript copy
+type WindowState = "open" | "closed" | "minimized";
+
+function getLength(obj: string | string[]) {
+  return obj.length;
+}
+
+function wrapInArray(obj: string | string[]) {
+  if (typeof obj === "string") {
+    return [obj]; // narrowed ke string
+  }
+  return obj; // string[]
+}
+```
+
+## Generics
+
+Generics menambahkan parameter tipe agar API fleksibel namun tetap terketik.
+
+```typescript copy
+type StringArray = Array<string>;
+type NumberArray = Array<number>;
+type ObjectWithNameArray = Array<{ name: string }>;
+```
+
+Mendefinisikan API generik:
+
+```typescript copy showLineNumbers {15}
+interface Backpack<Type> {
+  add: (obj: Type) => void;
+  get: () => Type;
+}
+
+// Deklarasi eksternal
+declare const backpack: Backpack<string>;
+
+const object = backpack.get(); // string
+backpack.add(23);
+Argument of type 'number' is not assignable to parameter of type 'string'.
+```
+
+## Structural Typing
+
+TypeScript bersifat struktural: kecocokan tipe ditentukan oleh bentuk (shape).
+
+```typescript copy showLineNumbers
+interface Point {
+  x: number;
+  y: number;
+}
+
+function logPoint(p: Point) {
+  console.log(`${p.x}, ${p.y}`);
+}
+
+const point = { x: 12, y: 26 };
+logPoint(point); // valid karena shape cocok
+```
+
+Objek tambahan properti tetap cocok selama properti yang disyaratkan tersedia.
+
+## Praktik Baik Singkat
+
+- Aktifkan opsi ketat (`"strict": true`) di `tsconfig.json`.
+- Gunakan inferensi untuk variabel lokal; gunakan anotasi untuk API publik.
+- Pilih `type` untuk union/mapped/tuple; `interface` untuk kontrak bentuk yang bisa digabung.
+- Gunakan narrowing (typeof, instanceof, in) untuk bekerja dengan union.

@@ -1,0 +1,66 @@
+---
+title: "Intro to Next.js"
+description: "Pengantar resmi Next.js untuk React 19: App Router, rendering hybrid, dan praktik terkini membangun aplikasi web modern."
+---
+
+# Next.js | Introduction
+
+## Overview
+
+Next.js adalah framework React dari Vercel untuk produksi. Rilis terbaru (kompatibel dengan React 19) berfokus pada App Router: rendering hybrid (SSR, SSG/ISR), file-based routing di `app/`, React Server Components, caching otomatis, dan data fetching terintegrasi.
+
+## Apa itu Next.js?
+
+Next.js adalah framework open-source yang menambahkan routing, rendering server, dan optimasi build di atas React. Fitur utamanya:
+
+- **App Router**: folder `app/` dengan file-based routing, React Server Components, dan nested layouts.
+- **Rendering hybrid**: SSR untuk data dinamis, SSG/ISR untuk konten cacheable, serta client-side rendering bila diperlukan.
+- **Data fetching terintegrasi**: `fetch` yang sadar cache/revalidate di Server Components dan Server Actions.
+- **Optimasi bawaan**: code splitting otomatis, image/font optimizations, middleware, dan hot refresh saat development.
+
+## Apa yang Membedakan Next.js Dengan React?
+
+- **Routing**: Next.js punya file-based routing; React murni perlu router pihak ketiga.
+- **Rendering**: Next.js mendukung SSR/SSG/ISR di luar kotak; React murni default di klien.
+- **Build & deploy**: Next.js menangani bundling, optimasi asset, dan middleware/edge; React murni perlu toolchain terpisah.
+- **Konvensi**: Next.js memberi opini (folder `app/`, file `layout.tsx`, metadata API); React murni fleksibel tapi membutuhkan keputusan arsitektur sendiri.
+
+## Kelebihan dari Next.js
+
+- SSR/SSG/ISR bawaan meningkatkan SEO dan performa.
+- App Router + React Server Components memindahkan logika data ke server.
+- Optimasi gambar/font/link otomatis.
+- Code splitting dan prefetch di level routing membuat navigasi cepat.
+- Ekosistem middleware/edge dan integrasi Vercel siap pakai.
+
+## Kekurangan dari Next.js
+
+- App Router butuh pemahaman baru (Server/Client Components, boundaries).
+- SSR/ISR memerlukan strategi cache dan invalidasi yang tepat.
+- Bundle klien bisa membesar jika terlalu banyak komponen `use client`.
+- Edge/middleware perlu memahami runtime yang berbeda.
+
+## Cara Instalasi
+
+Prasyarat (mengikuti panduan resmi):
+
+- [Node.js 18.18+](https://nodejs.org/) (disarankan Node 20 LTS).
+- macOS, Windows (termasuk WSL), atau Linux.
+
+Buat proyek baru dengan App Router:
+
+```bash copy
+npx create-next-app@latest my-app
+```
+
+Wizard akan menanyakan TypeScript, ESLint, Tailwind, dan alias import. App Router adalah default.
+
+## Menjalankan Server Development
+
+1. Masuk ke folder proyek dan jalankan `npm run dev` (atau `pnpm dev`/`yarn dev`).
+2. Buka http://localhost:3000.
+3. Edit file `app/page.tsx` (App Router) atau `pages/index.tsx` (Pages Router) lalu simpan untuk hot reload.
+
+## Kesimpulan
+
+Next.js memadukan pengalaman React dengan routing, rendering hybrid, dan optimasi build bawaan. Gunakan App Router untuk React Server Components, data fetching tersinkronisasi, serta caching dan revalidasi pintar; pilih SSR/SSG/ISR sesuai kebutuhan tiap rute.

@@ -1,0 +1,63 @@
+---
+title: "Intro to JavaScript"
+description: "Pengantar JavaScript modern sesuai MDN: apa itu JS, tempat ia berjalan, dan alasan memakainya di web."
+---
+
+# JavaScript | Introduction
+
+## Overview
+
+JavaScript adalah bahasa pemrograman utama web yang dieksekusi di browser dan dapat dijalankan di server melalui platform seperti Node.js. Standarnya disebut ECMAScript dan dirilis tahunan.
+
+## Introducing **JavaScript**
+
+JavaScript memungkinkan:
+
+- Manipulasi DOM untuk UI interaktif.
+- Pemanggilan HTTP (fetch API) untuk data dinamis.
+- Menjalankan logika di server (Node.js, Deno, Bun).
+- Menulis aplikasi lintas platform (web, desktop via Electron, mobile via React Native).
+
+Contoh dasar:
+
+```js
+const name = "Raka";
+const age = 20;
+
+console.log(`Halo, saya ${name} berumur ${age}`);
+```
+
+## Alasan mempelajari JavaScript
+
+- Bahasa utama front-end; satu-satunya bahasa yang berjalan di browser tanpa plugin.
+- Ekosistem besar (React, Next.js, Node.js) dengan tool modern untuk client dan server.
+- Dukungan lintas platform (web, desktop, mobile, server).
+
+## Menjalankan JavaScript
+
+### Di browser
+
+Buka DevTools (Console) lalu jalankan kode:
+
+```js
+console.log("Hello from browser");
+```
+
+### Dengan Node.js
+
+1. Unduh Node.js LTS dari https://nodejs.org/.
+2. Cek versi:
+
+```bash
+node -v
+```
+
+3. Jalankan berkas:
+
+```bash
+node app.js
+```
+
+## Sekilas tentang Node.js
+
+Node.js adalah runtime JavaScript berbasis V8 untuk menjalankan JS di luar browser. Ia mendukung modul (ESM dan CommonJS), npm untuk manajemen paket, serta I/O non-blocking untuk aplikasi server yang skalabel. Referensi resmi: https://nodejs.org/en/docs.

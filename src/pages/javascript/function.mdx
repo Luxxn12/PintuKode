@@ -1,0 +1,73 @@
+---
+title: "JavaScript Function"
+description: "Dasar fungsi JavaScript modern: deklarasi, ekspresi, arrow function, parameter default, rest, dan return."
+---
+
+# JavaScript | Function
+
+## Overview
+
+Fungsi adalah blok kode yang dapat dipanggil ulang. Mereka menerima argumen dan dapat mengembalikan nilai.
+
+## Pengertian
+
+Fungsi dapat dibuat sebagai deklarasi, ekspresi, atau arrow function. Fungsi membantu modularitas, reuse, dan pemisahan tanggung jawab.
+
+Keuntungan: menghindari pengulangan, memisah logika, dan mempermudah pengujian.
+
+## Cara Membuat Function
+
+### Deklarasi fungsi
+
+```js
+function luasPersegiPanjang(p, l) {
+  return p * l;
+}
+```
+
+### Ekspresi fungsi
+
+```js
+const luas = function (p, l) {
+  return p * l;
+};
+```
+
+### Arrow function
+
+```js
+const kali = (a, b) => a * b;
+```
+
+Arrow function tidak memiliki `this` dan `arguments`, cocok untuk callback.
+
+### Parameter default
+
+```js
+function greet(name = "teman") {
+  return `Halo, ${name}`;
+}
+```
+
+### Rest parameter
+
+```js
+function sum(...nums) {
+  return nums.reduce((acc, n) => acc + n, 0);
+}
+```
+
+## Cara Memanggil Function
+
+Panggil dengan tanda kurung dan argumen:
+
+```js
+const hasil = luasPersegiPanjang(4, 5);
+console.log(hasil); // 20
+```
+
+Jika tidak ada `return`, fungsi mengembalikan `undefined`.
+
+## Kesimpulan
+
+Gunakan deklarasi atau ekspresi untuk fungsi umum; gunakan arrow untuk callback atau fungsi kecil tanpa `this`. Manfaatkan parameter default dan rest untuk API yang fleksibel.

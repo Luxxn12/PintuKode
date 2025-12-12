@@ -1,0 +1,260 @@
+---
+title: "React Redux"
+description: "Panduan resmi Redux modern dengan Redux Toolkit: store, slice, typed hooks, async thunk, dan integrasi React."
+---
+
+# Global State | Redux
+
+## Overview
+
+Redux (versi modern) memakai Redux Toolkit sebagai cara resmi membuat store, reducer, dan middleware dengan sedikit boilerplate. Gunakan Redux Toolkit + React Redux untuk state global yang kompleks, async flow, dan integrasi devtools.
+
+## Kapan Menggunakan Redux
+
+- State global yang dibagikan banyak fitur dan sering berubah.
+- Perlu pola prediktabel untuk async (loading/error) dan caching.
+- Ingin time-travel debugging dan inspeksi state melalui Redux DevTools.
+
+## Instalasi
+
+```bash copy
+npm install @reduxjs/toolkit react-redux
+```
+
+## Membuat Store dengan Redux Toolkit
+
+Gunakan `createSlice` untuk state + reducer, lalu gabungkan dengan `configureStore`.
+
+```ts copy showLineNumbers filename="src/store.ts"
+import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+type CounterState = { value: number };
+const initialState: CounterState = { value: 0 };
+
+const counterSlice = createSlice({
+  name: "counter",
+  initialState,
+  reducers: {
+    increment(state) {
+      state.value += 1;
+    },
+    add(state, action: PayloadAction<number>) {
+      state.value += action.payload;
+    },
+    reset: () => initialState,
+  },
+});
+
+export const { increment, add, reset } = counterSlice.actions;
+
+export const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+
+## Menyediakan Store ke React
+
+Bungkus aplikasi dengan `Provider` dari React Redux.
+
+```tsx copy showLineNumbers filename="src/main.tsx"
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import App from "./App";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>
+);
+```
+
+## Hooks Bertipe: useSelector dan useDispatch
+
+Buat hooks pembungkus bertipe untuk ergonomi.
+
+```ts copy showLineNumbers filename="src/hooks.ts"
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "./store";
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+```
+
+Gunakan di komponen.
+
+```tsx copy showLineNumbers filename="src/Counter.tsx"
+import { add, increment } from "./store";
+import { useAppDispatch, useAppSelector } from "./hooks";
+
+export function Counter() {
+  const value = useAppSelector((state) => state.counter.value);
+  const dispatch = useAppDispatch();
+
+  return (
+    <div>
+      <p>Count: {value}</p>
+      <button onClick={() => dispatch(increment())}>+1</button>
+      <button onClick={() => dispatch(add(5))}>+5</button>
+    </div>
+  );
+}
+```
+
+## Async Logic dengan createAsyncThunk
+
+Gunakan `createAsyncThunk` untuk side-effect seperti fetch API.
+
+```ts copy showLineNumbers filename="src/features/userSlice.ts"
+import {
+  configureStore,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
+
+type User = { id: string; name: string };
+type UserState = {
+  status: "idle" | "loading" | "succeeded" | "failed";
+  data: User | null;
+  error?: string;
+};
+
+const initialState: UserState = { status: "idle", data: null };
+
+export const fetchUser = createAsyncThunk("user/fetch", async (id: string) => {
+  const res = await fetch(`/api/users/${id}`);
+  if (!res.ok) throw new Error("Gagal fetch user");
+  return (await res.json()) as User;
+});
+
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUser.pending, (state) => {
+        state.status = "loading";
+        state.error = undefined;
+      })
+      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+  },
+});
+
+export const userReducer = userSlice.reducer;
+```
+
+Tambahkan ke store:
+
+```ts copy showLineNumbers filename="src/store.ts"
+import { userReducer } from "./features/userSlice";
+
+export const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+    user: userReducer,
+  },
+});
+```
+
+Gunakan di komponen:
+
+```tsx copy showLineNumbers filename="src/UserProfile.tsx"
+import { useEffect } from "react";
+import { fetchUser } from "./features/userSlice";
+import { useAppDispatch, useAppSelector } from "./hooks";
+
+export function UserProfile({ userId }: { userId: string }) {
+  const dispatch = useAppDispatch();
+  const { data, status, error } = useAppSelector((s) => s.user);
+
+  useEffect(() => {
+    dispatch(fetchUser(userId));
+  }, [dispatch, userId]);
+
+  if (status === "loading") return <p>Loading...</p>;
+  if (status === "failed") return <p>Error: {error}</p>;
+  if (!data) return null;
+  return <p>Hi, {data.name}</p>;
+}
+```
+
+## RTK Query (Pilihan untuk Data Fetching)
+
+Untuk data fetching yang sering di-cache, gunakan RTK Query.
+
+```ts copy showLineNumbers filename="src/services/api.ts"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+export const api = createApi({
+  reducerPath: "api",
+  baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
+  endpoints: (builder) => ({
+    getPosts: builder.query<{ id: number; title: string }[], void>({
+      query: () => "/posts",
+    }),
+  }),
+});
+
+export const { useGetPostsQuery } = api;
+```
+
+Tambahkan middleware dan reducer:
+
+```ts copy showLineNumbers filename="src/store.ts"
+import { api } from "./services/api";
+
+export const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+    user: userReducer,
+    [api.reducerPath]: api.reducer,
+  },
+  middleware: (getDefault) => getDefault().concat(api.middleware),
+});
+```
+
+Gunakan hook auto-generated:
+
+```tsx copy showLineNumbers filename="src/Posts.tsx"
+import { useGetPostsQuery } from "./services/api";
+
+export function Posts() {
+  const { data, isLoading, error } = useGetPostsQuery();
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Gagal memuat</p>;
+  return (
+    <ul>
+      {data?.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## Praktik Baik (dari dokumentasi resmi)
+
+- Gunakan Redux Toolkit sebagai default; hindari boilerplate manual.
+- Simpan state sebagai data serializable; hindari mutasi tak terkendali (Immer sudah disediakan).
+- Simpan async logic di thunk/RTK Query, bukan di komponen.
+- Buat selector bertipe untuk akses state; hindari seleksi berat di komponen.
+- Aktifkan Redux DevTools untuk debugging dan time travel.
+
+Rujukan resmi: https://redux.js.org dan https://redux-toolkit.js.org.

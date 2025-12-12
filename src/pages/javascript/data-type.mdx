@@ -1,0 +1,88 @@
+---
+title: "JavaScript Data Type"
+description: "Ikhtisar tipe data JavaScript sesuai MDN: primitive (string, number, bigint, boolean, null, undefined, symbol) dan reference (object)."
+---
+
+# JavaScript | Data Type
+
+## Overview
+
+JavaScript bersifat dinamis, namun tetap memiliki tipe nilai. Tipe data menentukan cara nilai disimpan dan dioperasikan.
+
+## Introducing Data Type
+
+Tipe data adalah kategori nilai. JavaScript membedakan primitive (disimpan langsung) dan object/reference (disimpan sebagai referensi).
+
+Memahami tipe membantu memilih operasi dan menghindari bug konversi.
+
+## Jenis-jenis tipe data
+
+### Primitive
+
+1. **String**: teks. Gunakan `'...'`, `"..."`, atau `` `...` ``.
+
+```js
+const name = "Ayu";
+```
+
+2. **Number**: angka floating-point (termasuk integer).
+
+```js
+const price = 99.99;
+const count = 3;
+```
+
+3. **BigInt**: bilangan bulat arbitrer; tambahkan `n` atau gunakan `BigInt()`.
+
+```js
+const big = 12345678901234567890n;
+```
+
+4. **Boolean**: `true` / `false`.
+
+```js
+const isActive = true;
+```
+
+5. **Undefined**: variabel yang belum diisi atau properti yang tidak ada.
+
+```js
+let x;
+console.log(x); // undefined
+```
+
+6. **Null**: nilai kosong yang ditetapkan sengaja.
+
+```js
+const empty = null;
+```
+
+7. **Symbol**: identifier unik, sering untuk kunci properti non-bentrok.
+
+```js
+const token = Symbol("id");
+```
+
+### Reference (Object)
+
+Objek menyimpan pasangan kunci–nilai. Array, Date, Map, Set, dan fungsi juga termasuk objek.
+
+```javascript
+const person = { name: "Lia", age: 20 };
+const numbers = [1, 2, 3];
+const scores = new Map([
+  ["math", 90],
+  ["english", 88],
+]);
+```
+
+## Memeriksa Tipe
+
+Gunakan `typeof` untuk primitive (kecuali `null` yang mengembalikan `"object"` karena sejarah). Untuk array gunakan `Array.isArray()`.
+
+```javascript
+typeof "hi"; // "string"
+typeof 123; // "number"
+typeof null; // "object" (sejarah)
+Array.isArray([]); // true
+```

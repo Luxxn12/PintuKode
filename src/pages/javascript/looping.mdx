@@ -1,0 +1,263 @@
+---
+title: "JavaScript Looping"
+description: "Panduan loop JavaScript: for, while, do...while, for...of, for...in, forEach, dan catatan rekursi."
+---
+
+# JavaScript | Looping
+
+## Overview
+
+Loop digunakan untuk mengulang eksekusi kode hingga kondisi tertentu tercapai. JavaScript menyediakan beberapa jenis loop bawaan.
+
+## Pengertian
+
+Gunakan loop ketika jumlah iterasi diketahui (for) atau ketika iterasi bergantung pada kondisi (while). Perulangan juga bisa dilakukan dengan metode array seperti `forEach`, atau dengan rekursi jika struktur data cocok.
+
+## Mengenal Jenis-Jenis Looping di JavaScript
+
+Saat mengembangkan aplikasi web dengan JavaScript, terdapat beberapa jenis looping yang dapat kamu gunakan untuk melakukan pengulangan tugas tertentu. Setiap jenis looping memiliki kegunaannya sendiri, dan pemahaman mendalam tentang mereka akan membantu memilih metode yang paling tepat untuk menyelesaikan masalah yang dihadapi.
+
+### for Loop
+
+Loop klasik dengan inisialisasi, kondisi, dan increment/decrement.
+
+```javascript
+for (let i = 0; i < 5; i++) {
+  console.log("Iterasi ke-" + i);
+}
+
+// Iterasi ke-0
+// Iterasi ke-1
+// Iterasi ke-2
+// Iterasi ke-3
+// Iterasi ke-4
+```
+
+### while loop
+
+Berjalan selama kondisi bernilai true; pastikan variabel kontrol berubah.
+
+```javascript
+let i = 0;
+while (i < 5) {
+  console.log("Iterasi ke-" + i);
+  i++;
+}
+
+// Iterasi ke-0
+// Iterasi ke-1
+// Iterasi ke-2
+// Iterasi ke-3
+// Iterasi ke-4
+```
+
+### do-while loop
+
+Menjalankan blok minimal sekali sebelum memeriksa kondisi.
+
+```javascript
+let i = 0;
+do {
+  console.log("Iterasi ke-" + i);
+  i++;
+} while (i < 5);
+
+// Iterasi ke-0
+// Iterasi ke-1
+// Iterasi ke-2
+// Iterasi ke-3
+// Iterasi ke-4
+```
+
+### for...in loop
+
+Iterasi kunci enumerable pada objek. Hindari untuk array terurut; gunakan `for...of` atau metode array.
+
+```javascript
+const person = {
+  name: "John",
+  age: 30,
+  occupation: "Engineer",
+};
+
+for (const key in person) {
+  console.log(key + ": " + person[key]);
+}
+
+// name: John
+// age: 30
+// occupation: Engineer
+```
+
+### for...of loop
+
+Iterasi nilai pada iterable (array, string, Map, Set).
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+for (const number of numbers) {
+  console.log(number);
+}
+
+// 1
+// 2
+// 3
+// 4
+// 5
+```
+
+### forEach loop
+
+Metode array yang menjalankan callback untuk setiap elemen.
+
+```javascript
+const fruits = ["apple", "banana", "orange"];
+
+fruits.forEach((fruit) => {
+  console.log(fruit);
+});
+
+// apple
+// banana
+// orange
+```
+
+## Keajaiban Looping: Memperlajari Pengulangan Rekursif
+
+Rekursi adalah fungsi yang memanggil dirinya sendiri hingga kondisi dasar terpenuhi. Berguna untuk struktur pohon/graf dan kasus ketika loop iterative kurang ekspresif.
+
+## Memahami Logika Rekursif dalam JavaScript
+
+Pastikan ada base case untuk menghentikan panggilan ulang.
+
+```javascript
+function hitungFaktorial(angka) {
+  if (angka === 0) {
+    return 1;
+  } else {
+    return angka * hitungFaktorial(angka - 1);
+  }
+}
+
+console.log(hitungFaktorial(5)); // 120
+```
+
+Dalam contoh di atas, kita memiliki fungsi hitungFaktorial yang memanggil dirinya sendiri dengan angka yang terus berkurang hingga mencapai kasus dasar yaitu angka 0. Dengan demikian, logika rekursif ini akan menghitung faktorial dari angka input dengan cara mengalikan angka tersebut dengan faktorial dari angka sebelumnya secara terus-menerus hingga mencapai kasus dasar.
+
+## Tips Penting untuk Menggunakan Looping secara Efektif
+
+- Pilih loop sesuai kebutuhan: `for` untuk iterasi terindeks, `for...of` untuk iterable, `for...in` hanya untuk properti objek.
+- Selalu pastikan kondisi berhenti untuk menghindari infinite loop.
+- Pertimbangkan metode array (`map`, `filter`, `reduce`) untuk transformasi data yang lebih deklaratif.
+
+Contoh kasus: menampilkan bilangan prima dalam rentang tertentu.
+
+```javascript
+function isPrime(number) {
+  if (number <= 1) return false;
+  if (number <= 3) return true;
+  if (number % 2 === 0 || number % 3 === 0) return false;
+
+  for (let i = 5; i * i <= number; i += 6) {
+    if (number % i === 0 || number % (i + 2) === 0) return false;
+  }
+
+  return true;
+}
+
+function displayPrimesInRange(start, end) {
+  for (let num = start; num <= end; num++) {
+    if (isPrime(num)) {
+      console.log(num);
+    }
+  }
+}
+
+const startRange = 1;
+const endRange = 50;
+
+console.log(`Prime numbers between ${startRange} and ${endRange}:`);
+displayPrimesInRange(startRange, endRange);
+
+// Prime numbers between 1 and 50:
+// 2
+// 3
+// 5
+// 7
+// 11
+// 13
+// 17
+// 19
+// 23
+// 29
+// 31
+// 37
+// 41
+// 43
+// 47
+```
+
+Dalam contoh di atas, fungsi isPrime digunakan untuk memeriksa apakah suatu angka merupakan bilangan prima. Fungsi displayPrimesInRange menggunakan loop for untuk iterasi melalui rentang angka yang diberikan dan menampilkan bilangan prima.
+
+2. ### Case 2: Menghitung Rata-rata Nilai Array
+
+Sekarang mari kita pertimbangkan scenario di mana kita memiliki array berisi sejumlah nilai numerik dan kita perlu menghitung rata-rata dari nilai-nilai tersebut. Dalam hal ini, kita dapat menggunakan loop for untuk mengiterasi melalui setiap elemen dalam array dan menjumlahkannya secara berurutan.
+
+```javascript
+function calculateAverage(numbers) {
+  if (numbers.length === 0) {
+    return 0;
+  }
+
+  let sum = 0;
+  for (let i = 0; i < numbers.length; i++) {
+    sum += numbers[i];
+  }
+
+  return sum / numbers.length;
+}
+
+const scores = [85, 90, 78, 92, 88];
+const average = calculateAverage(scores);
+
+console.log(`Average score: ${average.toFixed(2)}`); // Average score: 86.60
+```
+
+Dalam contoh di atas, fungsi calculateAverage mengambil array numbers sebagai argumen dan menggunakan loop for untuk menjumlahkan semua nilai dalam array. Setelah itu, rata-rata dihitung dengan membagi jumlah total dengan panjang array. Hasil rata-rata ditampilkan dengan menggunakan metode toFixed(2) untuk membatasi desimal hingga dua angka.
+
+3. ### Case 3: Pangkatkan Semua Elemen Array
+
+Selanjutnya, bayangkan situasi di mana kamu memiliki sebuah array dan perlu memangkatkan semua elemennya dengan suatu pangkat tertentu. Dalam hal ini, kamu dapat menggunakan loop forEach pada array tersebut untuk melakukan iterasi melalui setiap elemen dan menerapkan operasi pemangkatan ke masing-masing nilai.
+
+```javascript
+function powerArrayElements(array, exponent) {
+  const poweredArray = [];
+
+  array.forEach((element) => {
+    const poweredValue = Math.pow(element, exponent);
+    poweredArray.push(poweredValue);
+  });
+
+  return poweredArray;
+}
+
+const numbers = [2, 3, 4, 5];
+const exponent = 2;
+const poweredNumbers = powerArrayElements(numbers, exponent);
+
+console.log(`Original numbers: ${numbers}`); // Original numbers: 2,3,4,5
+console.log(`Numbers powered by ${exponent}: ${poweredNumbers}`); // Numbers powered by 2: 4,9,16,25
+```
+
+Dalam contoh di atas, fungsi powerArrayElements mengambil array dan pangkat sebagai argumen, kemudian menggunakan loop forEach untuk mengiterasi melalui setiap elemen dalam array. Setiap elemen dipangkatkan dengan Math.pow dan hasilnya ditambahkan ke poweredArray.
+
+## Kesimpulan
+
+Setelah menjelajahi dunia JavaScript looping, kita dapat menyimpulkan bahwa penggunaan looping yang efektif dapat memberikan keajaiban dalam pengembangan aplikasi web. Melalui pemahaman yang mendalam tentang berbagai jenis looping dan kemampuan untuk menggabungkannya dengan logika rekursif, kita dapat mencapai tingkat efisiensi yang tinggi dalam penanganan tugas-tugas berulang.
+
+Dengan menggunakan loop for, while, do-while, dan for...in dengan bijak, kita dapat menghemat waktu dan usaha dalam menulis kode repetitif. Penting untuk memahami kapan menggunakan loop tertentu sesuai kebutuhan kasus yang sedang dihadapi. Memiliki pemahaman tentang pengulangan rekursif juga akan membuka pintu menuju solusi yang lebih elegan dan serbaguna.
+
+Menggunakan teknik looping secara cerdas juga membantu meningkatkan performa aplikasi web. Dengan melakukan iterasi melalui data dengan cara yang efisien, kita dapat mengurangi beban kerja server dan mengoptimalkan waktu respon halaman kepada pengguna. Dalam era digital saat ini, kecepatan adalah segalanya; oleh karena itu, menjadi penting untuk merangkai logika looping dengan baik agar aplikasi kita bisa bersaing di pasar yang kompetitif.
+
+Selain itu, melihat kemampuan JavaScript dalam hal pengolahan data berulang-ulang dalam kode serta memiliki fleksibilitas untuk menyesuaikan logika pengulangan sesuai kebutuhan proyek membuat kita merasa optimis dan terinspirasi. Kita dapat menciptakan solusi yang kompleks dan inovatif dengan menggunakan looping secara efektif. Melalui pemahaman yang mendalam tentang JavaScript looping, kita dapat mengasah kemampuan programming kita dan membuka pintu menuju pengembangan aplikasi yang lebih canggih dan dinamis.
