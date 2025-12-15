@@ -1,6 +1,6 @@
 # PintuKode
 
-PintuKode (singkatan dari PintuKode) merupakan platform yang dibuat sebagai sarana pembelajaran yang berbentuk seperti online modul untuk memudahkan proses belajar mentee untuk mengenal dan memperdalam pengetahuan terkait Frontend.
+PintuKode merupakan platform yang dibuat sebagai sarana pembelajaran yang berbentuk seperti online modul untuk memudahkan proses belajar mentee untuk mengenal dan memperdalam pengetahuan terkait Frontend.
 
 ## Documentation
 
