@@ -14,9 +14,13 @@
   "html": "HTML",
   "-- Advanced": {
     "type": "separator",
-    "title": "Advanced"
+    "title": "Advanced Web"
   },
   "react": "React",
   "nextjs": "Next.js",
+  "-- Mobile": {
+    "type": "separator",
+    "title": "Advanced Mobile"
+  },
   "react-native": "React Native"
 }
