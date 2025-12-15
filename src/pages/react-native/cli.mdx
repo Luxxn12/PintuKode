@@ -63,7 +63,7 @@ Sama seperti intro: gunakan `View`, `Text`, `SafeAreaView`, `StyleSheet`, dan ko
 
 ## Debugging
 
-- Flipper untuk log, network, layout inspector.
+- Flipper untuk log, network, layout inspector (lihat bagian Flipper di bawah).
 - Reload: `r` di Metro terminal atau `Cmd/Ctrl+R` di perangkat/emulator.
 - Dev Menu: `Cmd/Ctrl+D` (iOS), `Cmd/Ctrl+M` (Android), atau `adb shell input keyevent 82`.
 
@@ -89,6 +89,23 @@ Sama seperti intro: gunakan `View`, `Text`, `SafeAreaView`, `StyleSheet`, dan ko
 - Bersihkan cache Metro: `npx react-native start --reset-cache`.
 - Hapus build Android: `cd android && ./gradlew clean`.
 - Cocokkan versi JDK/Android SDK jika ada error toolchain.
+
+## Flipper untuk React Native CLI
+
+Flipper adalah tool debugging resmi untuk React Native (log, network, layout, perf).
+
+1) Instal Flipper desktop: https://fbflipper.com.
+2) Pastikan app dibangun dengan versi React Native yang menyertakan Flipper (default di proyek CLI baru).
+3) Jalankan Metro dan aplikasi (run-android/run-ios).
+4) Buka Flipper:
+   - Pilih perangkat/emulator, pilih app.
+   - Gunakan plugin `React DevTools`, `Logs`, `Network`, `Layout Inspector`, dan Hermes debugger bila Hermes aktif.
+5) Jika tidak terhubung:
+   - Pastikan adb mendeteksi perangkat `adb devices`.
+   - Di iOS, pastikan `use_flipper!()` aktif di `ios/Podfile` (default) dan jalankan `pod install`.
+   - Nonaktifkan jika build rilis bermasalah: sesuaikan konfigurasi Flipper di Gradle/Podfile.
+
+Referensi resmi: https://reactnative.dev/docs/next/using-flipper.
 
 ## Referensi Resmi
 

@@ -91,12 +91,26 @@ Jika butuh modul native kustom, lakukan `npx expo prebuild` untuk membuat folder
 ## Debugging
 
 - Gunakan Dev Menu (shake/perintah keyboard) untuk reload dan debug.
-- Flipper didukung untuk project EAS dengan arsitektur baru.
+- Flipper didukung untuk project EAS dengan arsitektur baru (lihat di bawah).
 - Reset cache Metro: `npx expo start -c`.
 
 ## Migrasi ke Bare Workflow
 
 Jika memerlukan kontrol penuh native, jalankan `npx expo prebuild` lalu kelola project seperti React Native CLI. Eksklusi fitur hanya-Expo jika tidak diperlukan.
+
+## Flipper dengan Expo/EAS
+
+- Flipper didukung pada build EAS (development build/custom client) dengan Arsitektur Baru.
+- Pastikan menggunakan Expo SDK terbaru dan buat development build via EAS:
+
+```bash copy
+eas build --profile development --platform android
+# atau
+eas build --profile development --platform ios
+```
+
+- Instal Flipper desktop, jalankan app development build di perangkat/emulator, lalu hubungkan lewat Flipper.
+- Untuk Expo Go standar, koneksi Flipper tidak tersedia; gunakan logging bawaan Dev Menu atau Remote JS Debugging.
 
 ## Referensi Resmi
 
