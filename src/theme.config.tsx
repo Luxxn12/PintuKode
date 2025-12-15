@@ -38,7 +38,7 @@ const config: DocsThemeConfig = {
     backToTop: true,
   },
   gitTimestamp: () => {
-    const now = new Date();
+    const now = new Date(2025, 11, 12); 
     return (
       <span>
         Terakhir diperbarui{" "}
