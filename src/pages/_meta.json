@@ -22,5 +22,5 @@
     "type": "separator",
     "title": "Advanced Mobile"
   },
-  "react-native": "React Native"
+  "reactNative": "React Native"
 }
