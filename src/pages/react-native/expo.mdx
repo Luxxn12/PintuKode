@@ -1,0 +1,105 @@
+---
+title: "React Native dengan Expo"
+description: "Panduan resmi Expo: membuat proyek, menjalankan di perangkat, fitur Expo Go, EAS Build/Submit, dan migrasi ke bare workflow."
+---
+
+# React Native | Expo
+
+## Overview
+
+Expo menyediakan toolchain terkurasi untuk React Native dengan setup cepat, Expo Go untuk pratinjau, serta layanan build (EAS) untuk rilis iOS/Android tanpa Xcode/Android Studio di awal.
+
+## Membuat Proyek
+
+```bash copy
+npx create-expo-app AwesomeProject
+cd AwesomeProject
+npm start
+```
+
+`npm start` membuka Expo CLI (Metro) dan menampilkan QR code untuk Expo Go.
+
+## Menjalankan Aplikasi
+
+- **Expo Go**: buka aplikasi Expo Go di perangkat, scan QR (Android) atau gunakan kamera (iOS).
+- **Simulator/Emulator**: gunakan tombol `i` (iOS simulator, macOS) atau `a` (Android emulator) di terminal Expo.
+
+## Struktur Proyek Singkat
+
+- `app/` (untuk Expo Router) atau `App.tsx` sebagai entry.
+- `app.json`/`app.config.ts`: konfigurasi Expo.
+- Tidak ada folder native secara default; ditambahkan jika di-"prebuild".
+
+## Styling & Komponen
+
+Komponen core React Native, plus library Expo (mis. `expo-router`, `expo-image`, `expo-linear-gradient`). Styling sama dengan React Native (StyleSheet/flexbox).
+
+## Fitur Expo Utama
+
+- Expo Go untuk pratinjau cepat.
+- Pustaka siap pakai (kamera, sensor, push, image).
+- Expo Router untuk navigasi file-based.
+- OTA updates (Expo Updates).
+- EAS Build dan EAS Submit untuk CI/CD rilis.
+
+## Build & Rilis dengan EAS
+
+1) Install CLI:
+
+```bash copy
+npm install -g eas-cli
+```
+
+2) Login: `eas login`.
+
+3) Konfigurasi:
+
+```bash copy
+eas build:configure
+```
+
+4) Build:
+
+```bash copy
+eas build --platform android
+eas build --platform ios
+```
+
+5) Submit ke store:
+
+```bash copy
+eas submit --platform android
+eas submit --platform ios
+```
+
+Gunakan profil rilis di `eas.json` untuk mengatur channel, credentials, dll. Lihat https://docs.expo.dev/build/introduction/.
+
+## OTA Updates
+
+Expo Updates memungkinkan push update JS tanpa rebuild biner. Atur channel dan release menggunakan EAS Update:
+
+```bash copy
+eas update --branch production --message "Fix bug"
+```
+
+Lihat https://docs.expo.dev/eas-update/introduction/.
+
+## Menambah Modul Native
+
+Jika butuh modul native kustom, lakukan `npx expo prebuild` untuk membuat folder `android/` dan `ios/` (bare-like), lalu tambahkan modul native. Pastikan kompatibel dengan Expo SDK yang digunakan.
+
+## Debugging
+
+- Gunakan Dev Menu (shake/perintah keyboard) untuk reload dan debug.
+- Flipper didukung untuk project EAS dengan arsitektur baru.
+- Reset cache Metro: `npx expo start -c`.
+
+## Migrasi ke Bare Workflow
+
+Jika memerlukan kontrol penuh native, jalankan `npx expo prebuild` lalu kelola project seperti React Native CLI. Eksklusi fitur hanya-Expo jika tidak diperlukan.
+
+## Referensi Resmi
+
+- Expo docs: https://docs.expo.dev
+- Expo Router: https://docs.expo.dev/routing/introduction
+- EAS Build/Submit: https://docs.expo.dev/build/introduction

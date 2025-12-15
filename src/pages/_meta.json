@@ -17,5 +17,6 @@
     "title": "Advanced"
   },
   "react": "React",
-  "nextjs": "Next.js"
+  "nextjs": "Next.js",
+  "react-native": "React Native"
 }

@@ -1,0 +1,96 @@
+---
+title: "React Native CLI"
+description: "Panduan resmi React Native CLI: prasyarat, inisialisasi proyek, menjalankan di Android/iOS, debugging, dan rilis."
+---
+
+# React Native CLI
+
+## Prasyarat (ikuti https://reactnative.dev/docs/environment-setup)
+
+- Node.js LTS
+- JDK 17 (untuk Android)
+- Android Studio + Android SDK, set `ANDROID_HOME` dan tambahkan `platform-tools` ke PATH
+- Xcode (hanya macOS) untuk build iOS/simulator
+- Watchman (disarankan di macOS)
+
+## Membuat Proyek
+
+```bash copy
+npx @react-native-community/cli init AwesomeProject
+cd AwesomeProject
+```
+
+## Menjalankan Aplikasi
+
+Jalankan Metro bundler:
+
+```bash copy
+npx react-native start
+```
+
+Di terminal lain, jalankan target:
+
+- Android (emulator atau perangkat tersambung):
+
+```bash copy
+npx react-native run-android
+```
+
+- iOS (simulator, macOS):
+
+```bash copy
+npx react-native run-ios
+```
+
+Gunakan `--device` untuk memilih perangkat spesifik jika diperlukan.
+
+## Struktur Proyek Singkat
+
+- `App.tsx`: entry React.
+- `android/`: proyek Gradle.
+- `ios/`: proyek Xcode.
+- `metro.config.js`: konfigurasi bundler.
+- `index.js`: entry register app.
+
+## Styling & Komponen
+
+Sama seperti intro: gunakan `View`, `Text`, `SafeAreaView`, `StyleSheet`, dan komponen core lain. Style menggunakan properti mirip CSS (flexbox).
+
+## Modul Native & Arsitektur Baru
+
+- Modul native: buat di `android`/`ios` atau gunakan TurboModules (JSI) untuk performa lebih baik.
+- Fabric renderer aktif di proyek baru; pastikan dependensi mendukungnya.
+
+## Debugging
+
+- Flipper untuk log, network, layout inspector.
+- Reload: `r` di Metro terminal atau `Cmd/Ctrl+R` di perangkat/emulator.
+- Dev Menu: `Cmd/Ctrl+D` (iOS), `Cmd/Ctrl+M` (Android), atau `adb shell input keyevent 82`.
+
+## Testing
+
+- Unit/UI: `@testing-library/react-native`.
+- E2E: Detox (Android/iOS).
+
+## Build & Rilis
+
+- Android:
+
+  - Buat keystore rilis, set di `android/app/build.gradle`.
+  - Build rilis: `cd android && ./gradlew assembleRelease` (APK) atau `bundleRelease` (AAB).
+
+- iOS:
+
+  - Buka `ios/AwesomeProject.xcworkspace` di Xcode.
+  - Atur signing, pilih scheme Release, lalu Archive dan kirim ke App Store Connect.
+
+## Pemecahan Masalah Umum
+
+- Bersihkan cache Metro: `npx react-native start --reset-cache`.
+- Hapus build Android: `cd android && ./gradlew clean`.
+- Cocokkan versi JDK/Android SDK jika ada error toolchain.
+
+## Referensi Resmi
+
+- Dokumentasi CLI: https://reactnative.dev/docs/environment-setup
+- Arsitektur baru: https://reactnative.dev/docs/the-new-architecture/pillars-overview

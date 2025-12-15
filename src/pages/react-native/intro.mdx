@@ -1,0 +1,128 @@
+---
+title: "Intro to React Native"
+description: "Pengantar resmi React Native: cara kerja, arsitektur baru, cara memulai, dan konsep inti."
+---
+
+# React Native | Introduction
+
+## Overview
+
+React Native memungkinkan kamu membangun aplikasi mobile (iOS/Android) menggunakan JavaScript/TypeScript dengan komponen React yang dirender ke native view. Versi terbaru mendukung Arsitektur Baru (Fabric, TurboModules) untuk performa lebih baik.
+
+## Cara Kerja Singkat
+
+- Komponen React ditulis di JavaScript/TypeScript.
+- UI dirender sebagai native views melalui bridge/JSI.
+- Style menggunakan flexbox dan API mirip CSS (StyleSheet).
+- Modul native bisa diakses lewat TurboModules atau bridge lama.
+
+## Instalasi & Setup
+
+Pilih salah satu cara resmi:
+
+1) **Expo** (termudah, banyak tooling siap pakai):
+
+```bash copy
+npx create-expo-app AwesomeProject
+cd AwesomeProject
+npm start
+```
+
+2) **React Native CLI** (bare workflow):
+
+Prasyarat: Node.js LTS, JDK 17 (untuk Android), Android Studio + SDK, Xcode (untuk iOS).
+
+```bash copy
+npx @react-native-community/cli init AwesomeProject
+cd AwesomeProject
+npx react-native start
+npx react-native run-android
+npx react-native run-ios
+```
+
+> Tips: Ikuti panduan resmi di https://reactnative.dev/docs/environment-setup untuk memastikan SDK/Path sudah benar.
+
+## Komponen Inti
+
+```tsx copy showLineNumbers filename="App.tsx"
+import { SafeAreaView, Text, View, Button } from "react-native";
+
+export default function App() {
+  return (
+    <SafeAreaView style={{ flex: 1, padding: 16 }}>
+      <View style={{ gap: 12 }}>
+        <Text style={{ fontSize: 20, fontWeight: "600" }}>
+          Halo dari React Native
+        </Text>
+        <Button title="Klik saya" onPress={() => console.log("pressed")} />
+      </View>
+    </SafeAreaView>
+  );
+}
+```
+
+## Styling
+
+Gunakan `StyleSheet` atau objek gaya inline dengan properti mirip CSS (camelCase).
+
+```tsx copy showLineNumbers
+import { StyleSheet, View, Text } from "react-native";
+
+const styles = StyleSheet.create({
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  title: { fontSize: 24, fontWeight: "700" },
+});
+
+export function Home() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome</Text>
+    </View>
+  );
+}
+```
+
+## Navigasi
+
+Gunakan library seperti React Navigation:
+
+```bash copy
+npm install @react-navigation/native
+npm install react-native-screens react-native-safe-area-context
+```
+
+Lalu ikuti setup di https://reactnavigation.org/docs/getting-started.
+
+## Data & State
+
+- State lokal: React hooks (`useState`, `useEffect`).
+- State global: Context, Redux Toolkit, Zustand, atau React Query untuk fetch + cache data.
+- Networking: gunakan `fetch` atau library seperti Axios.
+
+## Arsitektur Baru (Fabric & TurboModules)
+
+- **Fabric**: sistem rendering native baru, lebih cepat dan mendukung concurrent rendering.
+- **TurboModules**: akses modul native dengan JSI (lebih cepat dibanding bridge lama).
+- Pastikan project CLI baru sudah mengaktifkan konfigurasi ini; pada Expo SDK terbaru sebagian fitur sudah memakai arsitektur baru.
+
+## Testing
+
+- Komponen: `@testing-library/react-native`.
+- E2E: Detox.
+- TypeScript: gunakan tipe bawaan + deklarasi `ReactNative` dari paket `react-native`.
+
+## Debugging
+
+- Gunakan Flipper untuk log, network, dan inspect layout.
+- `npx react-native start --reset-cache` jika Metro bundler bermasalah.
+
+## Build & Release
+
+- Android: generate signed APK/AAB dengan Gradle; ikuti panduan resmi `Publishing to Google Play`.
+- iOS: gunakan Xcode untuk archive dan upload ke App Store Connect.
+
+## Referensi Resmi
+
+- Dokumentasi: https://reactnative.dev/docs/getting-started
+- Expo: https://docs.expo.dev
+*** End Patch"))}
