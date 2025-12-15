@@ -6,7 +6,7 @@ const config: DocsThemeConfig = {
     link: "https://github.com/Luxxn12/PintuKode",
   },
   docsRepositoryBase: "https://github.com/Luxxn12/PintuKode",
-  logo: <img src="/images/logo-icon.png" alt="LUXXNDEV Logo" className="h-20" />,
+  logo: <img src="/images/logo-icon.png" alt="LUXXNDEV Logo" className="h-16" />,
   // logo: <span className="font-mono text-3xl text-rataalada">{"LUXXNDEV"}</span>,
   head: () => {
     const ogConfig = {
@@ -24,7 +24,14 @@ const config: DocsThemeConfig = {
     );
   },
   footer: {
-    text: <span>PintuKode {new Date().getFullYear()}</span>,
+    text: (
+      <span>
+        PintuKode {new Date().getFullYear()} · Dibuat oleh{" "}
+        <a href="https://www.mohalif.my.id/" className="text-blue-300" target="_blank" rel="noreferrer">
+          Moh Alif Al Lukman
+        </a>
+      </span>
+    ),
   },
   sidebar: {
     toggleButton: true,
