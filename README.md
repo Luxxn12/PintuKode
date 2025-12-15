@@ -4,7 +4,7 @@ PintuKode merupakan platform yang dibuat sebagai sarana pembelajaran yang berben
 
 ## Documentation
 
-- [Deployment](https:/PintuKode.Luxxn12.com)
+- [Deployment](https://pintu-kode.vercel.app/)
 - [Repository](https://github.com/Luxxn12/PintuKode)
 
 ## Tech Stack
