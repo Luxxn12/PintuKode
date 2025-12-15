@@ -36,7 +36,7 @@ const config: DocsThemeConfig = {
   sidebar: {
     toggleButton: true,
     autoCollapse: false,
-    defaultMenuCollapseLevel: 1,
+    defaultMenuCollapseLevel: 0,
   },
   search: {
     placeholder: "Search...",
